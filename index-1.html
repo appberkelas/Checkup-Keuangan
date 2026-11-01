@@ -168,7 +168,7 @@ async function doExport(kind){const dl={save:async({filename,data})=>{const u=UR
  catch(e){modMsg(e&&e.code=="declined"?"Dibatalkan.":"Gagal mengekspor"+(e&&e.message?": "+e.message:"."))}}
 $("#exp").onclick=()=>{modMsg("");$("#mod").hidden=false};
 $("#mod").addEventListener("click",e=>{const i=e.target.id;if(i=="mod"||i=="ex-c")$("#mod").hidden=true;if(i=="ex-x")doExport("xlsx");if(i=="ex-p")doExport("pdf")});
-const SUPABASE_URL="ISI_SUPABASE_URL",SUPABASE_KEY="ISI_ANON_PUBLIC_KEY";
+const SUPABASE_URL="https://papmlmusfglgqfwlzehr.supabase.co",SUPABASE_KEY="sb_publishable_1QAvzWMUtMyoPNPos27Mnw_YuefybvB";
 const S0=JSON.stringify(S);let sb=null,user=null,loaded=false,recov=false,am="login";
 const ERR={"Invalid login credentials":"Email atau kata sandi salah.","Email not confirmed":"Email belum dikonfirmasi. Cek inbox/spam dan klik link konfirmasi.","User already registered":"Email sudah terdaftar. Silakan masuk.","New password should be different from the old password.":"Kata sandi baru harus berbeda dari yang lama."};
 const eMsg=e=>{const m=(e&&e.message)||"";if(/rate limit|too many|after \d+ seconds/i.test(m))return"Terlalu banyak percobaan. Tunggu beberapa menit lalu coba lagi.";if(/fetch|network/i.test(m))return"Koneksi bermasalah. Periksa internet Anda.";return ERR[m]||"Terjadi kesalahan: "+m};
