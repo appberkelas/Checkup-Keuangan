@@ -178,7 +178,7 @@ function authView(mode,msg,ok){am=mode;const T={login:["Masuk","Masuk"],daftar:[
  $("#ab").innerHTML=`<div style="text-align:center;margin-bottom:14px"><div style="font-size:34px">💰</div><h1>Check-Up Keuangan</h1><small>Pantau kesehatan keuangan Anda</small></div><div class="card"><h2>${T[0]}</h2>
 ${mode=="reset"?"":f("ae","email","Email","email")}${mode=="lupa"?"":f("ap","password",mode=="reset"?"Kata sandi baru (min. 8 karakter)":"Kata sandi"+(mode=="daftar"?" (min. 8 karakter)":""),mode=="login"?"current-password":"new-password")}${mode=="daftar"||mode=="reset"?f("ap2","password","Ulangi kata sandi","new-password"):""}
 <div id="amsg" style="min-height:20px;margin:2px 0 8px;font-size:13px"></div><button class="btn" id="a-go" style="width:100%;padding:12px">${T[1]}</button>
-${mode=="login"||mode=="daftar"?`<div style="text-align:center;margin:12px 0 4px"><small>atau</small></div><button class="btn g" id="a-g" style="width:100%;padding:12px">Lanjut dengan Google</button>`:""}</div>
+</div>
 <div style="text-align:center;font-size:14px;line-height:2">${mode=="login"?`<a href="#" data-am="lupa">Lupa kata sandi?</a><br>Belum punya akun? <a href="#" data-am="daftar">Daftar</a>`:mode=="reset"?"":`Sudah punya akun? <a href="#" data-am="login">Masuk</a>`}</div>
 <p class="mut" style="font-size:12px;text-align:center;margin-top:18px">Data keuangan Anda tersimpan terpisah per akun dan dilindungi aturan akses database.</p>`;
  $("#auth").style.display="block";if(msg)amsg(msg,ok)}
@@ -194,7 +194,7 @@ async function authGo(){const e=($("#ae")?.value||"").trim(),p=$("#ap")?.value||
   else if(am=="reset"){const{data,error}=await sb.auth.updateUser({password:p});if(error)throw error;recov=false;user=data.user;load()}}
  catch(x){amsg(eMsg(x))}finally{if(b)b.disabled=false}}
 document.addEventListener("click",async e=>{const a=e.target.closest("[data-am]");if(a){e.preventDefault();authView(a.dataset.am);return}
- if(e.target.id=="a-go")authGo();if(e.target.id=="a-g"){const{error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}});if(error)amsg(eMsg(error))}
+ if(e.target.id=="a-go")authGo();
  if(e.target.id=="out"){await sb.auth.signOut();location.reload()}});
 document.addEventListener("keydown",e=>{if(e.key=="Enter"&&e.target.closest("#auth"))authGo()});
 function save(){if(!loaded||!user)return;setStatus("Menyimpan…");clearTimeout(tm);tm=setTimeout(async()=>{try{const{error}=await sb.from("finance_data").upsert({user_id:user.id,data:S,updated_at:new Date().toISOString()});if(error)throw error;setStatus("Tersimpan di cloud")}catch(x){setStatus("Gagal menyimpan — periksa koneksi")}},700)}
