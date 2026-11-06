@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Check-Up Keuangan</title><meta name="description" content="Aplikasi check-up keuangan pribadi: neraca, arus kas, spending tracker, dan tujuan keuangan.">
+<title>Check-Up Keuangan</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1f7a5a"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Check-Up"><meta name="description" content="Aplikasi check-up keuangan pribadi: neraca, arus kas, spending tracker, dan tujuan keuangan.">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7f4;--card:#fff;--tx:#1d2420;--mut:#6b756e;--ln:#e0e4de;--ac:#1f7a5a;--ac2:#e8762b;--bad:#c0392b;--ok:#1f7a5a}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141816;--card:#1e2421;--tx:#eef2ee;--mut:#9aa59d;--ln:#2e3732;--ac:#3fb98d;--ac2:#f0924f;--bad:#ef6b5b;--ok:#3fb98d}}
@@ -30,7 +30,7 @@ input.n{width:112px;text-align:right}input.s{width:100%}
 .two{display:grid;grid-template-columns:1fr;gap:0 14px}@media(min-width:700px){.two{grid-template-columns:1fr 1fr}}
 @media print{nav,.noprint,header button{display:none!important}.card{break-inside:avoid}}
 </style></head><body>
-<header><div><h1>Check-Up Keuangan</h1><small id="st">Memuat…</small><br><small id="who" class="mut"></small></div><div class="noprint" style="display:flex;gap:6px"><button class="btn g" id="exp">Ekspor</button><button class="btn g" id="out">Keluar</button></div></header>
+<header><div><h1>Check-Up Keuangan</h1><small id="st">Memuat…</small><br><small id="who" class="mut"></small></div><div class="noprint" style="display:flex;gap:6px"><button class="btn g" id="inst" hidden>Pasang</button><button class="btn g" id="exp">Ekspor</button><button class="btn g" id="out">Keluar</button></div></header>
 <div id="mod" hidden style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center"><div class="card" style="width:100%;max-width:480px;margin:0;border-radius:18px 18px 0 0"><h2>Ekspor Data</h2><div style="display:grid;gap:8px"><button class="btn" id="ex-x">Unduh Excel (.xlsx)</button><button class="btn" id="ex-p">Unduh PDF</button><button class="btn g" id="ex-c">Tutup</button></div><p id="exm" class="mut" style="min-height:20px"></p></div></div>
 <div id="auth" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:30;overflow:auto"><div id="ab" style="max-width:380px;margin:0 auto;padding:36px 16px"></div></div>
 <nav id="nav"></nav><main id="app"></main>
@@ -169,7 +169,7 @@ async function doExport(kind){const dl={save:async({filename,data})=>{const u=UR
 $("#exp").onclick=()=>{modMsg("");$("#mod").hidden=false};
 $("#mod").addEventListener("click",e=>{const i=e.target.id;if(i=="mod"||i=="ex-c")$("#mod").hidden=true;if(i=="ex-x")doExport("xlsx");if(i=="ex-p")doExport("pdf")});
 const SUPABASE_URL="https://papmlmusfglgqfwlzehr.supabase.co",SUPABASE_KEY="sb_publishable_1QAvzWMUtMyoPNPos27Mnw_YuefybvB";
-const S0=JSON.stringify(S);let sb=null,user=null,loaded=false,recov=false,am="login";
+const S0=JSON.stringify(S);let dip=null,sb=null,user=null,loaded=false,recov=false,am="login";
 const ERR={"Invalid login credentials":"Email atau kata sandi salah.","Email not confirmed":"Email belum dikonfirmasi. Cek inbox/spam dan klik link konfirmasi.","User already registered":"Email sudah terdaftar. Silakan masuk.","New password should be different from the old password.":"Kata sandi baru harus berbeda dari yang lama."};
 const eMsg=e=>{const m=(e&&e.message)||"";if(/rate limit|too many|after \d+ seconds/i.test(m))return"Terlalu banyak percobaan. Tunggu beberapa menit lalu coba lagi.";if(/fetch|network/i.test(m))return"Koneksi bermasalah. Periksa internet Anda.";return ERR[m]||"Terjadi kesalahan: "+m};
 const amsg=(m,ok)=>{const x=$("#amsg");if(x){x.textContent=m||"";x.style.color=ok?"var(--ok)":"var(--bad)"}};
@@ -180,7 +180,7 @@ ${mode=="reset"?"":f("ae","email","Email","email")}${mode=="lupa"?"":f("ap","pas
 <div id="amsg" style="min-height:20px;margin:2px 0 8px;font-size:13px"></div><button class="btn" id="a-go" style="width:100%;padding:12px">${T[1]}</button>
 </div>
 <div style="text-align:center;font-size:14px;line-height:2">${mode=="login"?`<a href="#" data-am="lupa">Lupa kata sandi?</a><br>Belum punya akun? <a href="#" data-am="daftar">Daftar</a>`:mode=="reset"?"":`Sudah punya akun? <a href="#" data-am="login">Masuk</a>`}</div>
-<p class="mut" style="font-size:12px;text-align:center;margin-top:18px">Data keuangan Anda tersimpan terpisah per akun dan dilindungi aturan akses database.</p>`;
+<p class="mut" style="font-size:12px;text-align:center;margin-top:18px">Data keuangan Anda tersimpan terpisah per akun dan dilindungi aturan akses database.</p><div style="text-align:center;margin-top:10px"><button class="btn g" id="inst2" ${dip?"":"hidden"}>Pasang aplikasi di HP</button></div>`;
  $("#auth").style.display="block";if(msg)amsg(msg,ok)}
 const hideAuth=()=>{$("#auth").style.display="none"};
 async function authGo(){const e=($("#ae")?.value||"").trim(),p=$("#ap")?.value||"",p2=$("#ap2")?.value||"",b=$("#a-go");amsg("");
@@ -197,14 +197,19 @@ document.addEventListener("click",async e=>{const a=e.target.closest("[data-am]"
  if(e.target.id=="a-go")authGo();
  if(e.target.id=="out"){await sb.auth.signOut();location.reload()}});
 document.addEventListener("keydown",e=>{if(e.key=="Enter"&&e.target.closest("#auth"))authGo()});
-function save(){if(!loaded||!user)return;setStatus("Menyimpan…");clearTimeout(tm);tm=setTimeout(async()=>{try{const{error}=await sb.from("finance_data").upsert({user_id:user.id,data:S,updated_at:new Date().toISOString()});if(error)throw error;setStatus("Tersimpan di cloud")}catch(x){setStatus("Gagal menyimpan — periksa koneksi")}},700)}
+const jam=()=>{const d=new Date(),z=x=>String(x).padStart(2,"0");return z(d.getHours())+":"+z(d.getMinutes())+":"+z(d.getSeconds())};
+function save(){if(!loaded||!user)return;setStatus("Menyimpan…");clearTimeout(tm);tm=setTimeout(async()=>{try{const{error}=await sb.from("finance_data").upsert({user_id:user.id,data:S,updated_at:new Date().toISOString()});if(error)throw error;setStatus("Tersinkron "+jam())}catch(x){setStatus("Gagal menyimpan — periksa koneksi")}},700)}
 async function load(){hideAuth();setStatus("Memuat…");const{data,error}=await sb.from("finance_data").select("data").eq("user_id",user.id).maybeSingle();
  if(error){loaded=false;setStatus("Gagal memuat data. Muat ulang halaman.");return}
- S=Object.assign(JSON.parse(S0),(data&&data.data)||{});loaded=true;tab="dash";$("#who").textContent=user.email;setStatus("Tersimpan di cloud");nav();view()}
+ S=Object.assign(JSON.parse(S0),(data&&data.data)||{});loaded=true;tab="dash";$("#who").textContent=user.email;setStatus("Tersinkron "+jam());nav();view()}
 (()=>{nav();
+ if(!window.supabase&&!SUPABASE_URL.startsWith("ISI_")){$("#auth").style.display="block";$("#ab").innerHTML=`<div class="card"><h2>Tidak ada koneksi</h2><p>Aplikasi butuh internet untuk masuk dan memuat data. Periksa koneksi lalu muat ulang.</p></div>`;return}
  if(SUPABASE_URL.startsWith("ISI_")||!window.supabase){$("#auth").style.display="block";$("#ab").innerHTML=`<div class="card"><h2>Konfigurasi belum diisi</h2><p>Buka file index.html, isi SUPABASE_URL dan SUPABASE_KEY dengan data dari proyek Supabase Anda (lihat PANDUAN.md).</p></div>`;return}
  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);authView("login");$("#auth").style.display="none";
  sb.auth.onAuthStateChange((ev,ses)=>{if(ev=="PASSWORD_RECOVERY"){recov=true;authView("reset");return}
   if(ses&&ses.user){if(!recov&&(!user||user.id!==ses.user.id)){user=ses.user;setTimeout(load,0)}}
   else if(ev=="SIGNED_OUT"||ev=="INITIAL_SESSION"){user=null;loaded=false;authView("login")}})})();
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();dip=e;$("#inst").hidden=false;const i=$("#inst2");if(i)i.hidden=false});addEventListener("appinstalled",()=>{$("#inst").hidden=true;const i=$("#inst2");if(i)i.hidden=true;dip=null});
+document.addEventListener("click",async e=>{if((e.target.id=="inst"||e.target.id=="inst2")&&dip){dip.prompt();await dip.userChoice.catch(()=>{});dip=null;$("#inst").hidden=true;const i=$("#inst2");if(i)i.hidden=true}});
+if("serviceWorker" in navigator&&/^https?:/.test(location.protocol))addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 </script></body></html>
